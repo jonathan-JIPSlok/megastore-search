@@ -1,6 +1,15 @@
 [package]
-name = "megastore-search"
+name = "megastore_search"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "megastore_search"
+path = "src/main.rs"
+
 [dependencies]
+# Aqui você pode adicionar dependências, se precisar, como:
+# rand = "0.8"
