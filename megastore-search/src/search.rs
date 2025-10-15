@@ -1,18 +1,28 @@
 use std::collections::HashMap;
 use crate::produto::Produto;
 
+/// Estrutura que representa o índice para busca eficiente de produtos.
+///
+/// Mantém três índices separadamente para busca por nome, marca e categoria,
+/// usando mapas hash que armazenam vetores de produtos para cada chave.
 #[derive(Default)]
 pub struct Index {
+    /// Índice por nome, chave com String em minúsculas para busca rápida.
     pub index_nome: HashMap<String, Vec<Produto>>,
+    /// Índice por marca, chave com String em minúsculas para busca rápida.
     pub index_marca: HashMap<String, Vec<Produto>>,
+    /// Índice por categoria, chave com String em minúsculas para busca rápida.
     pub index_categoria: HashMap<String, Vec<Produto>>,
 }
 
 impl Index {
+    /// Cria um novo índice vazio, inicializando os três mapas hash.
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// Adiciona um produto ao índice, inserindo-o em cada mapa correspondente
+    /// ao nome, marca e categoria, convertidos para minúsculas para busca case-insensitive.
     pub fn adicionar_produto(&mut self, produto: Produto) {
         self.index_nome
             .entry(produto.nome.to_lowercase())
@@ -30,14 +40,17 @@ impl Index {
             .push(produto);
     }
 
+    /// Busca produtos pelo nome, retornando um vetor de produtos se algum for encontrado.
     pub fn buscar_por_nome(&self, nome: &str) -> Option<&Vec<Produto>> {
         self.index_nome.get(&nome.to_lowercase())
     }
 
+    /// Busca produtos pela marca, retornando um vetor de produtos se algum for encontrado.
     pub fn buscar_por_marca(&self, marca: &str) -> Option<&Vec<Produto>> {
         self.index_marca.get(&marca.to_lowercase())
     }
 
+    /// Busca produtos pela categoria, retornando um vetor de produtos se algum for encontrado.
     pub fn buscar_por_categoria(&self, categoria: &str) -> Option<&Vec<Produto>> {
         self.index_categoria.get(&categoria.to_lowercase())
     }
@@ -48,6 +61,7 @@ mod tests {
     use super::*;
     use crate::produto::Produto;
 
+    /// Testa a adição de um produto ao índice e sua busca pelo nome.
     #[test]
     fn teste_adicionar_produto_ao_indice() {
         let mut indice = Index::new();
@@ -60,6 +74,7 @@ mod tests {
         assert!(encontrados.contains(&produto));
     }
 
+    /// Testa a busca de produto pelo índice de marca.
     #[test]
     fn teste_buscar_por_marca() {
         let mut indice = Index::new();
@@ -71,6 +86,7 @@ mod tests {
         assert!(resultados.unwrap().contains(&produto));
     }
 
+    /// Testa a busca de produto numa categoria inexistente, esperando resultado None.
     #[test]
     fn teste_buscar_por_categoria_nao_encontrado() {
         let indice = Index::new();
